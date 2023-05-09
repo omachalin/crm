@@ -119,14 +119,25 @@ WSGI_APPLICATION = 'crm_rest.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'crm',
+#         'USER': 'crmuser',
+#         'PASSWORD': 'crmuserpass',
+#         'HOST': 'db',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crm',
         'USER': 'crmuser',
         'PASSWORD': 'crmuserpass',
-        'HOST': 'db',
-        'PORT': '3306',
+        'HOST': '45.81.224.229',
+        'PORT': '90',
     }
 }
 
