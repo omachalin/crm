@@ -34,7 +34,7 @@ class ComingViewSet(viewsets.ModelViewSet):
 
   @action(detail=False, methods=['GET'])
   def testirovanie(self, request, *args, **kwargs):
-    return Response('11323')
+    return Response('123123')
 
   @action(detail=False, methods=['GET'])
   def get_coming_with_client(self, request, *args, **kwargs):
