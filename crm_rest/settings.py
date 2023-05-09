@@ -125,8 +125,8 @@ DATABASES = {
         'NAME': 'crm',
         'USER': 'crmuser',
         'PASSWORD': 'crmuserpass',
-        'HOST': 'db',
-        'PORT': '3306',
+        'HOST': '45.81.224.229',
+        'PORT': '90',
     }
 }
 
