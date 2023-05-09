@@ -7,6 +7,7 @@ class PersonalFilter(filters.FilterSet):
   pin = filters.CharFilter(lookup_expr='iexact')
   phone = filters.CharFilter(lookup_expr='icontains')
   status_fk = filters.CharFilter(lookup_expr='iexact', field_name='status_fk__id')
+  department_fk = filters.CharFilter(lookup_expr='iexact', field_name='department_fk__id')
 
   class Meta:
     model = Personal
@@ -15,4 +16,5 @@ class PersonalFilter(filters.FilterSet):
       'phone',
       'pin',
       'status_fk',
+      'department_fk',
     }
