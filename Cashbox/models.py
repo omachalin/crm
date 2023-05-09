@@ -15,6 +15,17 @@ class TypePayment(models.Model):
   def __str__(self):
     return self.name
 
+class TypeMoney(models.Model):
+  id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+  name = models.CharField('Наименование', max_length=50)
+
+  class Meta():
+    verbose_name = "Тип денег"
+    verbose_name_plural = "Типы денег"
+
+  def __str__(self):
+    return self.name
+
 
 class Cashbox(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -23,6 +34,7 @@ class Cashbox(models.Model):
     MinValueValidator(1)
   ])
   type_payment_fk = models.ForeignKey(TypePayment, on_delete=models.PROTECT)
+  type_money_fk = models.ForeignKey(TypeMoney, on_delete=models.PROTECT)
   create_date_time = models.DateTimeField('Дата создания', null=True, auto_now_add=True)
 
   class Meta():

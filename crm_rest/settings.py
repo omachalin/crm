@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,8 +64,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30), # Время жизни access-токена
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7), # Время жизни refresh-токена
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5), # Время жизни access-токена
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=15), # Время жизни refresh-токена
     'ROTATE_REFRESH_TOKENS': True, # При каждом обновлении access-токена создается новый refresh-токен
     'BLACKLIST_AFTER_ROTATION': True, # Добавляет использованный refresh-токен в blacklist
     'UPDATE_LAST_LOGIN': False, # Не обновляет поле last_login при создании токена
@@ -120,8 +121,12 @@ WSGI_APPLICATION = 'crm_rest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'crm',
+        'USER': 'crmuser',
+        'PASSWORD': 'crmuserpass',
+        'HOST': 'db',
+        'PORT': '3306',
     }
 }
 
@@ -166,3 +171,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
