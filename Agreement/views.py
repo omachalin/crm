@@ -26,6 +26,9 @@ class AgreementViewSet(viewsets.ModelViewSet):
     .order_by('-create_date_time')
   )
 
+  serializer_class = AgreementSerializer
+
+
   @action(detail=False, methods=['get'], url_path='get-counter')
   def get_counter(self, request):
     today = timezone.now().date()
@@ -36,7 +39,7 @@ class AgreementViewSet(viewsets.ModelViewSet):
     
     payments_cashbox_dates_sorted = Cashbox.objects.filter(
       create_date_time__range=(start_of_day, end_of_day),
-      type_payment_fk='8e886f31-5400-4a0d-86cc-56893dfac269', # Только оплата по договору
+      type_payment_fk='b06d0dc1-5698-428d-82ca-e078bb493ee7', # Только оплата по договору
     )
 
     cashbox_all = payments_cashbox_dates_sorted.aggregate(total=Sum('money'))['total']
@@ -51,9 +54,7 @@ class AgreementViewSet(viewsets.ModelViewSet):
 
     if not cashbox_all:
       cashbox_all = 0
-    
-    #print(start_of_day)
-    #print(end_of_day)
+
     context = {
       'money_all': money_all,
       'cashbox_all': cashbox_all,
@@ -61,8 +62,6 @@ class AgreementViewSet(viewsets.ModelViewSet):
     }
 
     return Response(context)
-
-  serializer_class = AgreementSerializer
 
 
 class ServiceViewSet(viewsets.ModelViewSet):
