@@ -12,13 +12,14 @@ class StatusAdmin(admin.ModelAdmin):
 @admin.register(Coming)
 class ComingAdmin(admin.ModelAdmin):
   search_fields = ['name']
-  autocomplete_fields = ['client_fk']
-
+  autocomplete_fields = ['client_fk', 'call_fk']
+  filter_horizontal = ['upp']
+  
   list_display = [
     'name',
     #'client_fk',
-    'call',
-    'upp',
+    'call_fk',
+    #'upp',
     'theme_fk',
     'status_fk',
   ]

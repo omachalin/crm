@@ -22,7 +22,7 @@ class ComingViewSet(viewsets.ModelViewSet):
   pagination_class = MyPageNumberPagination
 
   queryset = (Coming.objects.all()
-              .select_related('theme_fk', 'status_fk')
+              .select_related('theme_fk', 'status_fk', 'call_fk').prefetch_related('upp')
               .order_by('-create_date_time'))
   serializer_class = ComingSerializer
 

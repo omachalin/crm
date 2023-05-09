@@ -4,6 +4,7 @@ from Personal.models import (Personal, Department, StatusPersone)
 
 @admin.register(Personal)
 class PersonalAdmin(admin.ModelAdmin):
+  search_fields = ['name', 'phone']
   list_display = [
     'name',
     'phone',

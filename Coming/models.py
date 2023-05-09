@@ -1,6 +1,7 @@
 from django.db import models
 from Client.models import (Client)
 import uuid
+from Personal.models import Personal
 
 
 class Theme(models.Model):
@@ -34,8 +35,15 @@ class Coming(models.Model):
   client_fk = models.ForeignKey(Client, on_delete=models.CASCADE)
   name = models.CharField(max_length=300)
   #phone = models.CharField(max_length=12)
-  call = models.IntegerField(null=True, blank=True)
-  upp = models.IntegerField(null=True, blank=True)
+  call_fk = models.ForeignKey(
+    Personal,
+    on_delete=models.PROTECT,
+    null=True,
+    blank=True,
+    verbose_name='Оператор',
+    related_name='calls'
+  )
+  upp = models.ManyToManyField(Personal, verbose_name='ЮПП')
   theme_fk = models.ForeignKey(Theme, on_delete=models.PROTECT, blank=True, null=True)
   status_fk = models.ForeignKey(Status, on_delete=models.CASCADE, blank=True, null=True)
   create_date_time = models.DateTimeField('Дата создания', null=True, auto_now_add=True)
