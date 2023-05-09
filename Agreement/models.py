@@ -2,6 +2,7 @@ from django.db import models
 import uuid
 from Coming.models import Coming
 from Cashbox.models import Cashbox
+from Personal.models import Personal
 
 
 class Service(models.Model):
@@ -26,6 +27,7 @@ class Agreement(models.Model):
   note = models.CharField(max_length=300, blank=True, null=True)
   dissolution = models.BooleanField(default=False)
   cashboxes = models.ManyToManyField(Cashbox, blank=True)
+  #upp = models.ManyToManyField(Personal)
   create_date_time = models.DateTimeField('Дата создания', null=True, auto_now_add=True)
 
   class Meta():
