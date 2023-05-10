@@ -9,6 +9,8 @@ class AgreementFilter(filters.FilterSet):
   note = filters.CharFilter(lookup_expr='icontains')
   theme_fk = filters.CharFilter(lookup_expr='exact', field_name='coming_fk__theme_fk__pk')
   service_fk = filters.CharFilter(lookup_expr='exact', field_name='service_fk__pk')
+  call = filters.CharFilter(lookup_expr='exact', field_name='coming_fk__call_fk__pk')
+  upp = filters.CharFilter(lookup_expr='exact', field_name='coming_fk__upp__pk')
 
   class Meta:
     model = Agreement
