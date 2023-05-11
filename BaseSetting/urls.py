@@ -1,16 +1,12 @@
 from rest_framework import routers
 from django.urls import path
-# from .views import TypePaymentViewSet, CashboxViewSet, TypeMoneyViewSet
+from .views import BaseSettingViewSet
 
 
-urlpatterns = [
-  
-]
+urlpatterns = []
 
 router = routers.DefaultRouter()
 
-# router.register('type-payment', TypePaymentViewSet)
-# router.register('type-money', TypeMoneyViewSet)
-# router.register('cashbox', CashboxViewSet)
+router.register('base-setting', BaseSettingViewSet)
 
 urlpatterns += router.urls
