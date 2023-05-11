@@ -1,21 +1,21 @@
 import django_filters as filters
-from Cashbox.models import Cashbox
+from Cashbox.models import Cashbox, TypePayment
 
 
 class CashboxFilter(filters.FilterSet):
   name = filters.CharFilter(lookup_expr='icontains')
   money = filters.CharFilter(lookup_expr='icontains')
-  # call = filters.CharFilter(lookup_expr='iexact')
-  # upp = filters.CharFilter(lookup_expr='iexact')
-  # theme_fk__name = filters.CharFilter(lookup_expr='iexact')
-  # status_fk_name = filters.CharFilter(lookup_expr='iexact')
+  type_payment_fk = filters.ModelMultipleChoiceFilter(
+    field_name='type_payment_fk',
+    to_field_name='id',
+    queryset=TypePayment.objects.all(),
+  )
 
   class Meta:
     model = Cashbox
     fields = {
       'name',
-      # 'call',
-      # 'upp',
-      # 'theme_fk',
-      # 'status_fk',
+      'money',
+      'type_payment_fk',
     }
+    ordering = ('id',)  # Добавьте упорядочивание по умолчанию
