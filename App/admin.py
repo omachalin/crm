@@ -7,5 +7,5 @@ from App.models import (App)
 class AppAdmin(admin.ModelAdmin):
   list_display = [
     'name',
-    'data',
+    #'data',
   ]

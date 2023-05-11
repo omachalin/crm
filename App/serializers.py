@@ -8,5 +8,5 @@ class AppSerializer(serializers.ModelSerializer):
     fields = (
       'pk',
       'name',
-      'data',
+      #'data',
     )

@@ -8,11 +8,10 @@ from rest_framework.decorators import action
 from Agreement.models import Agreement
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import CashboxFilter
-from datetime import datetime, time
-from django.utils import timezone
 from datetime import datetime, timedelta
 from django.db.models import Sum
-
+from BaseSetting.get_setting import get_options
+from django.db.models.functions import Coalesce
 
 class TypePaymentViewSet(viewsets.ModelViewSet):
   permission_classes = (IsAuthenticated, )
@@ -57,39 +56,22 @@ class CashboxViewSet(viewsets.ModelViewSet):
     today = datetime.today().date()
     fifteen_days_ago = today - timedelta(days=15)
     month_ago = today - timedelta(days=30)
-    expenses_status = '6619e12f-3247-4aea-93bf-434059ec6182'
-    cashbox_today = Cashbox.objects.filter(
-      create_date_time__date=today,
-    ).exclude(type_payment_fk=expenses_status).aggregate(total=Sum('money'))['total'] or 0
-    cashbox_15_days = Cashbox.objects.filter(
+    base_settings = get_options(['cashbox_type_payment_fk_expenses_status'])
+
+    cashbox = Cashbox.objects.exclude(type_payment_fk=base_settings['cashbox_type_payment_fk_expenses_status'])
+    cashbox_today = cashbox.filter(create_date_time__date=today).aggregate(
+      total=Coalesce(Sum('money'), 0)
+    )['total']
+
+    cashbox_15_days = cashbox.filter(
       create_date_time__date__lte=today,
       create_date_time__date__gte=fifteen_days_ago
-    ).exclude(type_payment_fk=expenses_status).aggregate(total=Sum('money'))['total'] or 0
-    cashbox_month = Cashbox.objects.filter(
+    ).aggregate(total=Coalesce(Sum('money'), 0))['total']
+
+    cashbox_month = cashbox.filter(
       create_date_time__date__lte=today,
       create_date_time__date__gte=month_ago
-    ).exclude(type_payment_fk=expenses_status).aggregate(total=Sum('money'))['total'] or 0
-
-    # agreements_dates_sorted = Agreement.objects.filter(create_date_time__range=(start_of_day, end_of_day))
-    # money_all = agreements_dates_sorted.aggregate(total=Sum('price'))['total']
-    
-    # payments_cashbox_dates_sorted = Cashbox.objects.filter(
-    #   create_date_time__range=(start_of_day, end_of_day),
-    #   type_payment_fk='b06d0dc1-5698-428d-82ca-e078bb493ee7', # Только оплата по договору
-    # )
-
-    # cashbox_all = payments_cashbox_dates_sorted.aggregate(total=Sum('money'))['total']
-    
-    # dissolution_agreements = Agreement.objects.filter(
-    #   create_date_time__range=(start_of_day, end_of_day),
-    #   dissolution=True
-    # ).count()
-
-    # if not money_all:
-    #   money_all = 0
-
-    # if not cashbox_all:
-    #   cashbox_all = 0
+    ).aggregate(total=Coalesce(Sum('money'), 0))['total']
 
     context = {
       'cashbox_today': cashbox_today,

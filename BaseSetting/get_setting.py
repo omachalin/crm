@@ -8,5 +8,5 @@ def get_options(params):
   settings = BaseSetting.objects.filter(name__in=params)
   result = {}
   for setting in settings:
-    result[setting.sys_name] = setting.value
+    result[setting.name] = setting.value
   return result
