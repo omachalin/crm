@@ -9,6 +9,8 @@ from Agreement.models import Agreement
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import CashboxFilter
 from .counters import CashBoxCounter
+from Coming.pagination import MyPageNumberPagination
+
 
 
 class TypePaymentViewSet(viewsets.ModelViewSet):
@@ -27,9 +29,10 @@ class CashboxViewSet(viewsets.ModelViewSet):
   #permission_classes = (IsAuthenticated, )
   filter_backends = (DjangoFilterBackend,)
   filterset_class = CashboxFilter
-
-  queryset = Cashbox.objects.all().select_related('type_money_fk', 'type_payment_fk')
+  pagination_class = MyPageNumberPagination
+  queryset = Cashbox.objects.all().select_related('type_money_fk', 'type_payment_fk').order_by('create_date_time')
   serializer_class = CashboxSerializer
+
 
   @action(detail=False, methods=['post'], url_path='add-payment-agreement')
   def add_payment_agreement(self, request):
