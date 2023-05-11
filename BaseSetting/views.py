@@ -11,5 +11,5 @@ class BaseSettingViewSet(viewsets.ModelViewSet):
   pagination_class = MyPageNumberPagination
   filterset_class = BaseSettingFilter
 
-  queryset = BaseSetting.objects.all()
+  queryset = BaseSetting.objects.all().select_related('app_fk')
   serializer_class = BaseSettingSerializer

@@ -11,10 +11,10 @@ from rest_framework.decorators import action
 from datetime import datetime, time
 from django.utils import timezone
 from Cashbox.models import Cashbox
+from BaseSetting.get_setting import get_option
 
 
 class AgreementViewSet(viewsets.ModelViewSet):
-  
   filter_backends = (DjangoFilterBackend,)
   filterset_class = AgreementFilter
   pagination_class = MyPageNumberPagination
@@ -39,7 +39,7 @@ class AgreementViewSet(viewsets.ModelViewSet):
     
     payments_cashbox_dates_sorted = Cashbox.objects.filter(
       create_date_time__range=(start_of_day, end_of_day),
-      type_payment_fk='b06d0dc1-5698-428d-82ca-e078bb493ee7', # Только оплата по договору
+      type_payment_fk=get_option('type_payment_fk_paid_agreement_status'), # Только оплата по договору
     )
 
     cashbox_all = payments_cashbox_dates_sorted.aggregate(total=Sum('money'))['total']

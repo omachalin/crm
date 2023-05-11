@@ -8,10 +8,8 @@ from rest_framework.decorators import action
 from Agreement.models import Agreement
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import CashboxFilter
-from datetime import datetime, timedelta
-from django.db.models import Sum
-from BaseSetting.get_setting import get_options
-from django.db.models.functions import Coalesce
+from .counters import CashBoxCounter
+
 
 class TypePaymentViewSet(viewsets.ModelViewSet):
   permission_classes = (IsAuthenticated, )
@@ -53,30 +51,9 @@ class CashboxViewSet(viewsets.ModelViewSet):
 
   @action(detail=False, methods=['get'], url_path='get-counter')
   def get_counter(self, request):
-    today = datetime.today().date()
-    fifteen_days_ago = today - timedelta(days=15)
-    month_ago = today - timedelta(days=30)
-    base_settings = get_options(['cashbox_type_payment_fk_expenses_status'])
+    cashbox_obj = CashBoxCounter()
+    cashbox_obj.get_income()
+    cashbox_obj.get_expenses()
+    cashbox_obj.get_profit()
 
-    cashbox = Cashbox.objects.exclude(type_payment_fk=base_settings['cashbox_type_payment_fk_expenses_status'])
-    cashbox_today = cashbox.filter(create_date_time__date=today).aggregate(
-      total=Coalesce(Sum('money'), 0)
-    )['total']
-
-    cashbox_15_days = cashbox.filter(
-      create_date_time__date__lte=today,
-      create_date_time__date__gte=fifteen_days_ago
-    ).aggregate(total=Coalesce(Sum('money'), 0))['total']
-
-    cashbox_month = cashbox.filter(
-      create_date_time__date__lte=today,
-      create_date_time__date__gte=month_ago
-    ).aggregate(total=Coalesce(Sum('money'), 0))['total']
-
-    context = {
-      'cashbox_today': cashbox_today,
-      'cashbox_month': cashbox_month,
-      'cashbox_15_days': cashbox_15_days,
-    }
-
-    return Response(context)
+    return Response(cashbox_obj.get())
