@@ -5,7 +5,7 @@ import uuid
 class App(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   name = models.CharField('Наименование', max_length=300)
-  data = models.JSONField('Data', null=True, blank=True)
+  #data = models.JSONField('Data', null=True, blank=True)
 
   class Meta():
     verbose_name = "Приложение"
