@@ -151,3 +151,31 @@ class CashBoxCounter():
         ),
       }
     })
+
+  def get_counter_graph(self):
+    # Выборка платежей за текущий месяц
+    today, fifteen_days_ago, _ = self.get_current_date()
+    payments = Cashbox.objects.filter(
+      create_date_time__date__lte=today,
+      create_date_time__date__gte=fifteen_days_ago
+    ).order_by('-create_date_time')
+
+    grouped_payments = payments.values('create_date_time', 'type_payment_fk').annotate(total=Sum('money'))
+    result = {}
+    base_settings = get_options([
+      'type_payment_fk_agreement_status',
+      'type_payment_fk_transport_status',
+      'type_payment_fk_expenses_status',
+    ])
+    for payment in grouped_payments:
+      date_key = payment['create_date_time'].strftime('%Y-%m-%d')
+      type_payment_fk = str(payment['type_payment_fk'])
+      if date_key not in result:
+        result[date_key] = {'income': 0, 'expense': 0}
+      if (type_payment_fk == base_settings['type_payment_fk_agreement_status'] 
+          or type_payment_fk == base_settings['type_payment_fk_transport_status']):
+          result[date_key]['income'] = payment['total']
+      elif type_payment_fk == base_settings['type_payment_fk_expenses_status']:
+          result[date_key]['expense'] = payment['total']
+
+    self.result = result
