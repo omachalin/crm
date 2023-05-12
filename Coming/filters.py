@@ -9,6 +9,7 @@ class ComingFilter(filters.FilterSet):
   upp = filters.CharFilter(lookup_expr='iexact', field_name='upp__id')
   theme_fk__name = filters.CharFilter(lookup_expr='iexact')
   status_fk_name = filters.CharFilter(lookup_expr='iexact')
+  create_date_time = filters.DateTimeFromToRangeFilter()
 
   class Meta:
     model = Coming
@@ -18,4 +19,5 @@ class ComingFilter(filters.FilterSet):
       'upp',
       'theme_fk',
       'status_fk',
+      'create_date_time',
     }

@@ -11,10 +11,12 @@ class AgreementFilter(filters.FilterSet):
   service_fk = filters.CharFilter(lookup_expr='exact', field_name='service_fk__pk')
   call = filters.CharFilter(lookup_expr='exact', field_name='coming_fk__call_fk__pk')
   upp = filters.CharFilter(lookup_expr='exact', field_name='coming_fk__upp__pk')
+  create_date_time = filters.DateTimeFromToRangeFilter()
 
   class Meta:
     model = Agreement
     fields = {
       'number',
       'note',
+      'create_date_time',
     }
