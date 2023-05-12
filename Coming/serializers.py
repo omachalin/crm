@@ -1,7 +1,7 @@
 from .models import (Coming, Theme)
 from Client.serializers import ClientSerializer
 from rest_framework import serializers
-from Personal.serializers import PersonalSerializer
+from Personal.serializers import PersonalSerializer, PersonalMinForCashBoxSerializer
 
 
 class ThemeSerializer(serializers.ModelSerializer):
@@ -21,6 +21,17 @@ class StatusSerializer(serializers.ModelSerializer):
       'name',
     )
 
+
+class ComingMinForCashboxSerializer(serializers.ModelSerializer):
+  call_readonly = PersonalMinForCashBoxSerializer(source='call_fk', read_only=True)
+  upp_readonly = PersonalMinForCashBoxSerializer(source='upp', read_only=True, many=True)
+
+  class Meta:
+    model = Coming
+    fields = (
+      'call_readonly',
+      'upp_readonly',
+    )
 
 class ComingSerializer(serializers.ModelSerializer):
   theme = ThemeSerializer(source='theme_fk', read_only=True)

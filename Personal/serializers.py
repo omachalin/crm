@@ -21,6 +21,16 @@ class DepartmentSerializer(serializers.ModelSerializer):
     )
 
 
+class PersonalMinForCashBoxSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Personal
+    fields = (
+      'pk',
+      'name',
+      'pin',
+    )
+
+
 class PersonalSerializer(serializers.ModelSerializer):
   department_fk = DepartmentSerializer()
   status_fk = StatusPersoneSerializer()
