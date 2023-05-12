@@ -48,7 +48,6 @@ class CashboxSerializer(serializers.ModelSerializer):
       'type_money',
       'type_payment',
       'create_date_time',
-      'agreement_set',
       'agreements',
     )
     ordering = ['-money']
