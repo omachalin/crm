@@ -63,3 +63,9 @@ class CashboxViewSet(viewsets.ModelViewSet):
     cashbox_obj.get_profit()
 
     return Response(cashbox_obj.get())
+
+  @action(detail=False, methods=['get'], url_path='get-counter-graph')
+  def get_counter_graph(self, request):
+    cashbox_obj = CashBoxCounter()
+    print(cashbox_obj.get_counter_graph())
+    return Response(cashbox_obj.get())
