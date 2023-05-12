@@ -10,6 +10,7 @@ class CashboxFilter(filters.FilterSet):
     to_field_name='id',
     queryset=TypePayment.objects.all(),
   )
+  create_date_time = filters.DateTimeFromToRangeFilter()
 
   class Meta:
     model = Cashbox
@@ -17,5 +18,6 @@ class CashboxFilter(filters.FilterSet):
       'name',
       'money',
       'type_payment_fk',
+      'create_date_time',
     }
-    ordering = ('id',)  # Добавьте упорядочивание по умолчанию
+    ordering = ('create_date_time',)

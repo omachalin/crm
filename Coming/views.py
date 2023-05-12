@@ -33,10 +33,6 @@ class ComingViewSet(viewsets.ModelViewSet):
     return data
 
   @action(detail=False, methods=['GET'])
-  def testirovanie(self, request, *args, **kwargs):
-    return Response('123123')
-
-  @action(detail=False, methods=['GET'])
   def get_coming_with_client(self, request, *args, **kwargs):
     queryset = self.filter_queryset(self.get_queryset())
     page = self.paginate_queryset(queryset)

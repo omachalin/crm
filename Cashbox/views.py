@@ -30,7 +30,10 @@ class CashboxViewSet(viewsets.ModelViewSet):
   filter_backends = (DjangoFilterBackend,)
   filterset_class = CashboxFilter
   pagination_class = MyPageNumberPagination
-  queryset = Cashbox.objects.all().select_related('type_money_fk', 'type_payment_fk').order_by('create_date_time')
+  queryset = Cashbox.objects.all().select_related(
+    'type_money_fk',
+    'type_payment_fk'
+  ).order_by('-create_date_time')
   serializer_class = CashboxSerializer
 
 
