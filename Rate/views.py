@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 from Coming.models import Coming
 from Coming.serializers import ComingMinForRateSerializer
 import uuid
+from Agreement.models import Agreement
+from Agreement.serializers import AgreementMinFromRateSerializer
 
 
 class GetRate(APIView):
@@ -32,23 +34,30 @@ class GetRate(APIView):
     today = datetime.today().date()
     fifteen_days_ago = today - timedelta(days=15)
 
-    cashboxes_obj = Cashbox.objects.filter(
-      create_date_time__date__lte=today,
-      create_date_time__date__gte=fifteen_days_ago,
-      type_payment_fk__in=[
-        base_settings['type_payment_fk_agreement_status'],
-        base_settings['type_payment_fk_transport_status'],
-      ],
-    )
+    # cashboxes_obj = Cashbox.objects.filter(
+    #   create_date_time__date__lte=today,
+    #   create_date_time__date__gte=fifteen_days_ago,
+    #   type_payment_fk=base_settings['type_payment_fk_agreement_status'],
+    #     #base_settings['type_payment_fk_agreement_status'],
+    #     #base_settings['type_payment_fk_transport_status'],
+    #   #],
+    # )
   
     comings_obj = Coming.objects.filter(
       create_date_time__date__lte=today,
       create_date_time__date__gte=fifteen_days_ago,
     )
     
-    cashboxes_serializer = CashboxSerializer(cashboxes_obj, many=True).data
+    #cashboxes_serializer = CashboxSerializer(cashboxes_obj, many=True).data
     comings_serializer = ComingMinForRateSerializer(comings_obj, many=True).data
+    #agreements_serializer = Agre
+    agreements_obj = Agreement.objects.filter(
+      cashboxes__create_date_time__date__lte=today,
+      cashboxes__create_date_time__date__gte=fifteen_days_ago,
+    ).distinct()
 
+    agreements_serializer = AgreementMinFromRateSerializer(agreements_obj, many=True).data
+    
     rate_result = []
     salary_percent = 0.2
 
@@ -62,20 +71,28 @@ class GetRate(APIView):
         'agreements_money': 0,
         'cashbox_agreements_money': 0,
         'salary': 0,
+        'price_transport': 0,
       }
 
       for coming in comings_serializer:
         if uuid.UUID(persone_key['pk']) in coming['upp']:
           persone['comings'] += 1
 
-      for cashbox in cashboxes_serializer:
-        agreement_cashbox = cashbox['agreements'][0]
-        for upp in agreement_cashbox['coming']['upp_readonly']:
-          if persone_key['pk'] == upp['pk']:
-            persone['agreements'] += 1
-            persone['agreements_money'] += agreement_cashbox['price']
-            persone['cashbox_agreements_money'] += cashbox['money']
-            persone['salary'] += cashbox['money'] * salary_percent
+      agreement_payment_fk = uuid.UUID(base_settings['type_payment_fk_agreement_status'])
+      persone_pk = uuid.UUID(persone_key['pk'])
+      for agreement in agreements_serializer:
+        if persone_pk in agreement['coming']['upp']:
+          persone['agreements'] += 1
+          persone['agreements_money'] += agreement['price']
+          persone['price_transport'] += agreement['price_transport']
+          for cashbox in agreement['cashboxes']:
+            if cashbox['type_payment_fk'] == agreement_payment_fk:
+              persone['cashbox_agreements_money'] += cashbox['money']
+
+      salary = (persone['cashbox_agreements_money'] - persone['price_transport']) * salary_percent
+      persone['salary'] = 0 if salary < 0 else salary
+      del persone['price_transport']
+
       rate_result.append(persone)
 
     return Response(rate_result)

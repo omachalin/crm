@@ -30,6 +30,7 @@ class AgreementMinSerializer(serializers.ModelSerializer):
       'number',
       'coming',
       'price',
+      'price_transport',
       'create_date_time',
     )
 
@@ -51,5 +52,17 @@ class CashboxSerializer(serializers.ModelSerializer):
       'type_payment',
       'create_date_time',
       'agreements',
+    )
+    ordering = ['-money']
+
+
+class CashboxMinForRateSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Cashbox
+    fields = (
+      'pk',
+      'money',
+      'type_payment_fk',
+      'create_date_time',
     )
     ordering = ['-money']
