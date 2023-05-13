@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'Agreement',
     'Cashbox',
     'BaseSetting',
+    'Rate',
 ]
 
 REST_FRAMEWORK = { 

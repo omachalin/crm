@@ -27,6 +27,7 @@ urlpatterns = [
     re_path(r'^api/v1/app/', include('App.urls')),
     re_path(r'^api/v1/agreement/', include('Agreement.urls')),
     re_path(r'^api/v1/basesetting/', include('BaseSetting.urls')),
+    re_path(r'^api/v1/rate/', include('Rate.urls')),
     re_path(r'^api/v1/client/', include('Client.urls')),
     re_path(r'^api/v1/cashbox/', include('Cashbox.urls')),
     re_path('token/', jwt_views.TokenObtainPairView.as_view(), name ='token_obtain_pair'), 

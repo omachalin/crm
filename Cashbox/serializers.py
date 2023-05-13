@@ -29,6 +29,8 @@ class AgreementMinSerializer(serializers.ModelSerializer):
     fields = (
       'number',
       'coming',
+      'price',
+      'create_date_time',
     )
 
 
