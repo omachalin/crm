@@ -22,6 +22,14 @@ class StatusSerializer(serializers.ModelSerializer):
     )
 
 
+class ComingMinForRateSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Coming
+    fields = (
+      'upp',
+    )
+
+
 class ComingMinForCashboxSerializer(serializers.ModelSerializer):
   call_readonly = PersonalMinForCashBoxSerializer(source='call_fk', read_only=True)
   upp_readonly = PersonalMinForCashBoxSerializer(source='upp', read_only=True, many=True)
