@@ -16,7 +16,6 @@ class GetRate(APIView):
   #permission_classes = (IsAuthenticated, )
 
   def get(self, request, *args, **kwargs):
-
     base_settings = get_options([
       'fk_status_working',
       'fk_department_upp',
@@ -40,8 +39,6 @@ class GetRate(APIView):
         base_settings['type_payment_fk_agreement_status'],
         base_settings['type_payment_fk_transport_status'],
       ],
-      # agreement__create_date_time__date__lte=today,
-      # agreement__create_date_time__date__gte=fifteen_days_ago,
     )
   
     comings_obj = Coming.objects.filter(
@@ -50,7 +47,6 @@ class GetRate(APIView):
     )
     
     cashboxes_serializer = CashboxSerializer(cashboxes_obj, many=True).data
-
     comings_serializer = ComingMinForRateSerializer(comings_obj, many=True).data
 
     rate_result = []
@@ -59,6 +55,7 @@ class GetRate(APIView):
     for persone_key in persons_serializer:
       persone = {
         'pk': persone_key['pk'],
+        'name': persone_key['name'],
         'pin': persone_key['pin'],
         'comings': 0,
         'agreements': 0,
@@ -81,25 +78,4 @@ class GetRate(APIView):
             persone['salary'] += cashbox['money'] * salary_percent
       rate_result.append(persone)
 
-    # for cashbox in cashboxes_serializer:
-    #   for personal in persons_serializer:
-    #     for upp in cashbox['agreements'][0]['coming']['upp_readonly']:
-    #       if personal['pk'] == upp['pk']:
-    #         if personal['pk'] not in rate_result:
-    #           print('!!!!!!!')
-    #           rate_result.append({
-    #             'pk': personal['pk'],
-    #             'pin': personal['pin'],
-    #             'comings': 0,
-    #             'agreements': 0,
-    #             'agreement_money': 0,
-    #             'cashbox_agreements_money': 0,
-    #           })
-
-            #rate_result[personal['pk']]['agreements'] += 1
-        # print(cashbox['agreements'][0]['coming']['upp_readonly'])
-          # if agreement['upp_readonly']['pk'] == personal['pk']:
-          #   print('123')
-    
-    #print(rate_result['571ea069-2536-437d-bd76-4f0a8311ad83'])
     return Response(rate_result)
